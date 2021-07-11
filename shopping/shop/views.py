@@ -17,7 +17,16 @@ def index(request):
 
 
 def closet_create(request):
-    form = ClosetCreateForm()
+    if request.method == 'POST':
+        form = ClosetCreateForm()
+        if form.is_valid():
+            context = form.save(commit=False)
+            context.create_date = timezone.now()
+            context.save()
+            return redirect('shop:index')
+
+    else:
+        form = ClosetCreateForm()
     content = {'form': form}
 
     return render(request, 'shop/closetCreate_form.html', content)
